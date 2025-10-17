@@ -393,3 +393,59 @@ class AssemblyTranslator:
         self.asm_output.append("    RET")
         
         return self.asm_output
+
+class CompilerInterface:
+    def __init__(self, window):
+        self.window = window
+        self.window.title("Mini Compiler - By Soma Das")
+        self.window.geometry("1400x850")
+        self.window.configure(bg='#1e1e1e')
+        
+        # Initialize components
+        self.scanner = TokenScanner()
+        self.scanner.initialize()
+        self.processor = SyntaxProcessor()
+        self.processor.initialize()
+        self.translator = AssemblyTranslator()
+        
+        self.build_interface()
+        
+    def build_interface(self):
+        container = ttk.Frame(self.window, padding="10")
+        container.grid(row=0, column=0, sticky=(tk.W, tk.E, tk.N, tk.S))
+        
+        self.window.columnconfigure(0, weight=1)
+        self.window.rowconfigure(0, weight=1)
+        container.columnconfigure(1, weight=1)
+        container.rowconfigure(1, weight=1)
+        
+        # Input Section
+        input_panel = ttk.LabelFrame(container, text="Input Code", padding="10")
+        input_panel.grid(row=1, column=0, sticky=(tk.W, tk.E, tk.N, tk.S), padx=5)
+        
+        self.code_input = scrolledtext.ScrolledText(input_panel, width=50, height=30,
+                                                    font=('Consolas', 10))
+        self.code_input.pack(fill=tk.BOTH, expand=True)
+        
+        # Default sample
+        example = """int num1;
+int num2;
+num1 = 15;
+num2 = 25;
+int result;
+result = num1 + num2;
+print(result);
+
+if (num1 < num2) {
+    int delta;
+    delta = num2 - num1;
+    print(delta);
+}
+
+int idx;
+idx = 0;
+while (idx < 3) {
+    idx = idx + 1;
+}
+"""
+        self.code_input.insert('1.0', example)
