@@ -58,56 +58,6 @@ A complete compiler implementation with graphical user interface, featuring all 
 └─────────────────┘
 ```
 
-## 🚀 Installation
-
-### Prerequisites
-
-- Python 3.8 or higher
-- pip (Python package manager)
-
-### Steps
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/mini-compiler.git
-   cd mini-compiler
-   ```
-
-2. **Install required dependencies**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-   Or install manually:
-   ```bash
-   pip install ply
-   ```
-
-3. **Run the compiler**
-   ```bash
-   python comp.py
-   ```
-
-## 💻 Usage
-
-1. **Launch the application**
-   ```bash
-   python comp.py
-   ```
-
-2. **Write or paste your code** in the left panel (Input Code section)
-
-3. **Click the "Compile" button** to start compilation
-
-4. **View results** in the right panel tabs:
-   - **Token Stream**: View all tokens generated
-   - **Variable Registry**: See all declared variables
-   - **IR Code**: Examine intermediate representation
-   - **Assembly**: View generated assembly code
-   - **Issues**: Check for compilation errors
-
-5. **Use the "Reset" button** to clear all fields
-
 ## 📝 Supported Language Features
 
 ### Data Types
@@ -226,7 +176,7 @@ main:
 
 ## Generated Files
 
-When you run the compiler for the first time, PLY (Python Lex-Yacc) automatically generates two files:
+When I run the compiler for the first time, PLY (Python Lex-Yacc) automatically generates two files:
 
 ### `parsetab.py`
 - **Purpose**: Contains the compiled parser table
