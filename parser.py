@@ -69,15 +69,16 @@ class SyntaxProcessor:
         dtype = p[1]
         name = p[2]
         
-        if self.registry.find(name):
-            self.issues.append(f"Redeclaration of '{name}'")
+        # Check if variable already declared in current scope
+        if self.registry.is_declared_in_current_scope(name):
+            self.issues.append(f"Redeclaration of '{name}' in current scope")
         else:
             if len(p) == 4:
-                self.registry.add(name, dtype)
+                self.registry.add(name, dtype, None, context='declaration')
                 p[0] = ('decl', dtype, name)
             else:
                 val = p[4]
-                self.registry.add(name, dtype, val)
+                self.registry.add(name, dtype, val, context='declaration')
                 self.add_instruction('assign', val, None, name)
                 p[0] = ('decl_init', dtype, name, val)
     
@@ -137,8 +138,21 @@ class SyntaxProcessor:
         p[0] = ('loop', cmp, p[5])
     
     def p_code_block(self, p):
-        '''code_block : LBRACE stmt_sequence RBRACE'''
+        '''code_block : block_start stmt_sequence block_end'''
         p[0] = ('block', p[2])
+    
+    def p_block_start(self, p):
+        '''block_start : LBRACE'''
+        # Push new scope when entering block
+        scope_name = f"block_{self.registry.current_scope_id + 1}"
+        self.registry.push_scope(scope_name)
+        p[0] = 'block_start'
+    
+    def p_block_end(self, p):
+        '''block_end : RBRACE'''
+        # Pop scope when exiting block
+        self.registry.pop_scope()
+        p[0] = 'block_end'
     
     def p_comparison(self, p):
         '''comparison : expr rel_op expr'''
@@ -219,5 +233,8 @@ class SyntaxProcessor:
         self.lbl_counter = 0
         self.issues = []
         self.ast = []
+        
+        # Ensure symbol table is at global scope
+        self.registry.clear()
         
         return self.processor.parse(code)
