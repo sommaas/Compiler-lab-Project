@@ -16,7 +16,19 @@ class TokenScanner:
         'LPAREN', 'RPAREN', 'LBRACE', 'RBRACE', 'SEMICOLON', 'COMMA',
     ] + list(keywords.values())
 
-    # Token rules
+    # Token rules (order matters for PLY)
+    def t_COMMENT_SINGLE(self, tok):
+        r'//.*'
+        # Ignore single-line comments
+        pass
+
+    def t_COMMENT_MULTI(self, tok):
+        r'/\*(.|\n)*?\*/'
+        # Count newlines in multi-line comments
+        tok.lexer.lineno += tok.value.count('\n')
+        # Ignore multi-line comments
+        pass
+
     t_PLUS = r'\+'
     t_MINUS = r'-'
     t_MULTIPLY = r'\*'
@@ -25,10 +37,10 @@ class TokenScanner:
     t_EQUALS = r'='
     t_EQUAL_TO = r'=='
     t_NOT_EQUAL = r'!='
+    t_LESS_EQ = r'<='  # Must come before LESS
+    t_GREATER_EQ = r'>='  # Must come before GREATER
     t_LESS = r'<'
-    t_LESS_EQ = r'<='
     t_GREATER = r'>'
-    t_GREATER_EQ = r'>='
     t_LPAREN = r'\('
     t_RPAREN = r'\)'
     t_LBRACE = r'\{'
